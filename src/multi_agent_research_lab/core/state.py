@@ -32,3 +32,14 @@ class ResearchState(BaseModel):
 
     def add_trace_event(self, name: str, payload: dict[str, Any]) -> None:
         self.trace.append({"name": name, "payload": payload})
+
+    def add_agent_result(self, agent: str, content: str, metadata: dict[str, Any] | None = None) -> None:
+        self.agent_results.append(
+            AgentResult(agent=agent, content=content, metadata=metadata or {}),
+        )
+
+    def last_route(self) -> str | None:
+        return self.route_history[-1] if self.route_history else None
+
+    def is_complete(self) -> bool:
+        return bool(self.research_notes and self.analysis_notes and self.final_answer)
